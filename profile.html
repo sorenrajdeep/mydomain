@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sci-Fi Portfolio Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: black;
+      color: #00ffe1;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    canvas#starfield {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+    }
+
+    nav {
+      width: 220px;
+      background: rgba(0, 255, 225, 0.1);
+      border-right: 2px solid #00ffe1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      z-index: 1;
+    }
+
+    nav h2 {
+      font-size: 1.4em;
+      margin-bottom: 30px;
+    }
+
+    nav a {
+      color: #00ffe1;
+      text-decoration: none;
+      margin-bottom: 15px;
+      font-weight: bold;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    nav a:hover {
+      color: #000;
+      background: #00ffe1;
+      padding: 5px 10px;
+      border-radius: 8px;
+    }
+
+    .main {
+      flex: 1;
+      padding: 40px;
+      overflow-y: auto;
+      scroll-snap-type: y mandatory;
+      height: 100vh;
+    }
+
+    section {
+      margin-bottom: 60px;
+      scroll-snap-align: start;
+      min-height: 100vh;
+    }
+
+    .section-title {
+      font-size: 1.8em;
+      margin-bottom: 15px;
+      border-bottom: 1px solid #00ffe1;
+      padding-bottom: 5px;
+      animation: glitch 1s infinite;
+    }
+
+    .project-card {
+      background: rgba(0, 255, 225, 0.05);
+      border: 1px solid #00ffe1;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      transition: 0.3s;
+    }
+
+    .project-card:hover {
+      box-shadow: 0 0 10px #00ffe1;
+    }
+
+    .profile-pic-container {
+      margin: 20px 0;
+    }
+
+    .profile-pic-preview {
+      margin-top: 10px;
+      max-width: 200px;
+      border-radius: 10px;
+      border: 2px solid #00ffe1;
+    }
+
+    @keyframes glitch {
+      0% { text-shadow: 2px 2px red, -2px -2px blue; }
+      25% { text-shadow: -2px 1px lime, 1px -2px magenta; }
+      50% { text-shadow: 2px -2px red, -1px 2px cyan; }
+      75% { text-shadow: -2px -1px yellow, 2px 2px green; }
+      100% { text-shadow: 1px 1px white, -1px -1px blue; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="starfield"></canvas>
+
+  <nav>
+    <h2>🚀 Nova Zeta</h2>
+    <a onclick="scrollToSection('dashboard')">Dashboard</a>
+    <a onclick="scrollToSection('projects')">Projects</a>
+    <a onclick="scrollToSection('skills')">Skills</a>
+    <a onclick="scrollToSection('logs')">Mission Logs</a>
+    <a onclick="scrollToSection('contact')">Contact</a>
+  </nav>
+
+  <div class="main">
+    <section id="dashboard">
+      <h3 class="section-title">Dashboard</h3>
+      <p>Welcome to the personal control panel of Nova Zeta. All systems online.</p>
+      <div class="profile-pic-container">
+        <img class="profile-pic-preview" src="https://via.placeholder.com/200x200.png?text=Profile+Pic" alt="Profile Picture" />
+      </div>
+    </section>
+
+    <section id="projects">
+      <h3 class="section-title">Projects</h3>
+      <div class="project-card">
+        <h4>Quantum Beacon</h4>
+        <p>AI-driven cosmic signal router deployed in deep space operations.</p>
+      </div>
+      <div class="project-card">
+        <h4>Neural Drift Simulator</h4>
+        <p>Experimental brainwave mapping interface for memory replication.</p>
+      </div>
+    </section>
+
+    <section id="skills">
+      <h3 class="section-title">Skills & Tech</h3>
+      <p>React, Three.js, Node.js, WebGL, AI integration, Cybernetic UI Design</p>
+    </section>
+
+    <section id="logs">
+      <h3 class="section-title">Mission Logs</h3>
+      <p>Logs will appear here as interstellar assignments are completed.</p>
+    </section>
+
+    <section id="contact">
+      <h3 class="section-title">Contact / Beacon Signal</h3>
+      <p>Reach out via encrypted transmission: nova@galacticmail.net</p>
+    </section>
+  </div>
+
+  <script>
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    const canvas = document.getElementById("starfield");
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.position.z = 5;
+
+    // Stars
+    const starsGeometry = new THREE.BufferGeometry();
+    const starCount = 1000;
+    const starPositions = [];
+
+    for (let i = 0; i < starCount; i++) {
+      const x = (Math.random() - 0.5) * 2000;
+      const y = (Math.random() - 0.5) * 2000;
+      const z = -Math.random() * 2000;
+      starPositions.push(x, y, z);
+    }
+
+    starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starPositions, 3));
+    const starsMaterial = new THREE.PointsMaterial({ color: 0x00ffe1, size: 1 });
+    const starField = new THREE.Points(starsGeometry, starsMaterial);
+    scene.add(starField);
+
+    // Planets
+    function createPlanet(radius, textureUrl, position) {
+      const textureLoader = new THREE.TextureLoader();
+      const geometry = new THREE.SphereGeometry(radius, 32, 32);
+      const material = new THREE.MeshStandardMaterial({
+        map: textureLoader.load(textureUrl),
+      });
+      const planet = new THREE.Mesh(geometry, material);
+      planet.position.set(...position);
+      scene.add(planet);
+    }
+
+    const light = new THREE.PointLight(0xffffff, 2);
+    light.position.set(0, 0, 10);
+    scene.add(light);
+
+    createPlanet(5, 'https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg', [30, 10, -100]);
+    createPlanet(3, 'https://threejs.org/examples/textures/planets/mars_1k_color.jpg', [-40, -20, -120]);
+
+    function animateScene() {
+      requestAnimationFrame(animateScene);
+      starField.rotation.y += 0.0005;
+      starField.rotation.x += 0.0003;
+      renderer.render(scene, camera);
+    }
+
+    animateScene();
+  </script>
+
+</body>
+</html>
